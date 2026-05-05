@@ -1,17 +1,14 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "lib": ["ES2021", "DOM"],
+    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "types": ["node"]
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "include": ["src", "remotion.config.ts", "input.json"]
+  "include": ["src"]
 }
