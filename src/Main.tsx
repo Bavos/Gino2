@@ -18,7 +18,7 @@ const fonts = {
 export const Main: React.FC = () => {
   const frame = useCurrentFrame();
 
-  const sceneDuration = 150;
+  const sceneDuration = Math.floor(900 / data.scenes.length);
   const sceneIndex = Math.floor(frame / sceneDuration);
   const scene = data.scenes[sceneIndex];
 
