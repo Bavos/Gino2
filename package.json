@@ -2,21 +2,19 @@
   "name": "interlocucao-clinica-remotion",
   "version": "1.0.0",
   "private": true,
-  "description": "Vídeo institucional premium com Remotion",
   "scripts": {
     "start": "remotion studio src/index.ts",
     "build": "tsc --noEmit",
-    "render": "remotion render src/index.ts Video out/video-final.mp4 --props=./input.json --codec=h264 --overwrite"
+    "render": "npx remotion render src/index.ts Video out/video-final.mp4 --props=./input.json --codec=h264 --overwrite"
   },
   "dependencies": {
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "remotion": "4.0.236"
+    "remotion": "^4.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
-    "typescript": "5.6.3"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
   }
 }
