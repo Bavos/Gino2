@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "jsx": "react-jsx",
     "strict": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "noEmit": true
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node", "react", "react-dom"]
   },
-  "include": ["src"]
+  "include": ["src", "input.json", "remotion.config.ts"]
 }
