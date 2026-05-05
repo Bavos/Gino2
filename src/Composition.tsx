@@ -1,65 +1,251 @@
-import React from 'react';
-import {AbsoluteFill, Easing, interpolate, spring, useCurrentFrame} from 'remotion';
-import {Background} from './components/Background';
-import {Footer} from './components/Footer';
-import {HighlightCard} from './components/HighlightCard';
-import {TextBlock} from './components/TextBlock';
-import type {VideoProps} from './types';
+import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import data from '../input.json';
 
-const sceneDurations = [120, 120, 150, 150, 150, 120, 90];
-
-const getScene = (frame: number) => {
-  let acc = 0;
-  for (let i = 0; i < sceneDurations.length; i++) {
-    const next = acc + sceneDurations[i];
-    if (frame < next) return {index: i, localFrame: frame - acc, duration: sceneDurations[i]};
-    acc = next;
-  }
-  return {index: sceneDurations.length - 1, localFrame: 0, duration: sceneDurations.at(-1) ?? 90};
+const colors = {
+  deepGreen: '#073D34',
+  darkGreen: '#052B25',
+  gold: '#D8B56D',
+  cream: '#F5EFE3',
+  ivory: '#FFF8EC',
+  textDark: '#123C35',
+  muted: '#6F6A5F',
 };
 
-export const MainComposition: React.FC<VideoProps> = (props) => {
+const fonts = {
+  title: 'Georgia, Times New Roman, serif',
+  body: 'Arial, Helvetica, sans-serif',
+};
+
+type Scene = {
+  title: string;
+  highlight?: string;
+  subtitle?: string;
+  text: string;
+};
+
+export const Main: React.FC = () => {
   const frame = useCurrentFrame();
-  const {index, localFrame, duration} = getScene(frame);
-  const scene = props.scenes[index];
-  const entrance = spring({frame: localFrame, fps: 30, config: {damping: 18, mass: 0.8}});
-  const exit = interpolate(localFrame, [duration - 22, duration], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.quad)});
-  const opacity = entrance * exit;
-  const scale = interpolate(entrance, [0, 1], [1.08, 1]);
+
+  const sceneDuration = 150;
+  const sceneIndex = Math.floor(frame / sceneDuration);
+  const scene = data.scenes[sceneIndex] as Scene | undefined;
+
+  const localFrame = frame % sceneDuration;
+
+  const opacity = interpolate(localFrame, [0, 22, 125, 150], [0, 1, 1, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const translateY = interpolate(localFrame, [0, 28], [36, 0], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  const scale = interpolate(frame, [0, 900], [1, 1.035], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+
+  if (!scene) return null;
 
   return (
-    <AbsoluteFill style={{fontFamily: 'Inter, SF Pro Display, Arial, sans-serif'}}>
-      <Background sceneIndex={index} />
-      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', transform: `scale(${scale})`, opacity}}>
-        {index === 2 ? (
-          <div style={{textAlign: 'center', color: 'white'}}>
-            <h1 style={{fontSize: 88, margin: 0, textShadow: '0 0 28px rgba(255,202,122,0.35)'}}>{scene.title}</h1>
-            <div style={{fontSize: 240, fontWeight: 800, lineHeight: 1, color: '#f8d889', textShadow: '0 0 45px rgba(245,183,77,0.5)'}}>03</div>
-            <p style={{fontSize: 40}}>{scene.text}</p>
-          </div>
-        ) : index === 3 ? (
-          <div style={{textAlign: 'center'}}>
-            <TextBlock title={scene.title} text={scene.text} />
-            <div style={{display: 'flex', gap: 20, marginTop: 42, justifyContent: 'center'}}>
-              <HighlightCard label="Escuta" />
-              <HighlightCard label="Intercâmbio" />
-              <HighlightCard label="Síntese" />
+    <AbsoluteFill
+      style={{
+        background: colors.cream,
+        fontFamily: fonts.body,
+        overflow: 'hidden',
+      }}
+    >
+      <AbsoluteFill
+        style={{
+          background: `linear-gradient(135deg, ${colors.deepGreen} 0%, ${colors.darkGreen} 46%, #0B4A3F 100%)`,
+          transform: `scale(${scale})`,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'radial-gradient(circle at 75% 20%, rgba(216,181,109,0.22), transparent 34%), radial-gradient(circle at 12% 78%, rgba(255,248,236,0.12), transparent 38%)',
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: 86,
+          left: 72,
+          right: 72,
+          height: 2,
+          background: colors.gold,
+          opacity: 0.9,
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          top: 52,
+          left: 72,
+          color: colors.gold,
+          fontSize: 28,
+          letterSpacing: 5,
+          fontWeight: 700,
+        }}
+      >
+        ITAIPAVA / PETRÓPOLIS - RJ
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          left: 64,
+          right: 64,
+          top: 280,
+          bottom: 250,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity,
+          transform: `translateY(${translateY}px)`,
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            background: 'rgba(255, 248, 236, 0.92)',
+            border: `2px solid rgba(216,181,109,0.7)`,
+            borderRadius: 42,
+            padding: '70px 54px',
+            boxShadow: '0 35px 90px rgba(0,0,0,0.35)',
+          }}
+        >
+          <h1
+            style={{
+              margin: 0,
+              fontFamily: fonts.title,
+              fontSize: 82,
+              lineHeight: 1.05,
+              fontWeight: 700,
+              color: colors.textDark,
+              textAlign: 'left',
+            }}
+          >
+            {scene.title}
+            {scene.highlight ? (
+              <>
+                <br />
+                <span style={{color: colors.gold}}>{scene.highlight}</span>
+              </>
+            ) : null}
+          </h1>
+
+          {scene.subtitle ? (
+            <div
+              style={{
+                marginTop: 28,
+                fontSize: 34,
+                color: colors.gold,
+                fontWeight: 700,
+                lineHeight: 1.25,
+              }}
+            >
+              {scene.subtitle}
             </div>
+          ) : null}
+
+          <div
+            style={{
+              width: 120,
+              height: 3,
+              background: colors.gold,
+              marginTop: 38,
+              marginBottom: 38,
+            }}
+          />
+
+          <p
+            style={{
+              margin: 0,
+              fontSize: 38,
+              lineHeight: 1.35,
+              color: colors.textDark,
+              fontWeight: 400,
+            }}
+          >
+            {scene.text}
+          </p>
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          left: 64,
+          right: 64,
+          bottom: 92,
+          background: colors.deepGreen,
+          borderRadius: 32,
+          padding: '34px 42px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 20px 55px rgba(0,0,0,0.3)',
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontFamily: fonts.title,
+              color: colors.ivory,
+              fontSize: 34,
+              fontWeight: 700,
+            }}
+          >
+            Interlocução Clínica
           </div>
-        ) : index === 5 ? (
-          <div style={{textAlign: 'center'}}>
-            <TextBlock title={scene.title} text={scene.text} />
-            <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 34, marginTop: 50}}>
-              {[0, 1, 2].map((c) => (
-                <div key={c} style={{width: 44 + c * 8, height: 44 + c * 8, borderRadius: '50%', background: 'rgba(255,221,157,0.85)', boxShadow: '0 0 40px rgba(255,221,157,0.75)'}} />
-              ))}
-            </div>
+          <div
+            style={{
+              color: colors.gold,
+              fontSize: 22,
+              marginTop: 6,
+              letterSpacing: 1,
+            }}
+          >
+            Núcleo de Discussão Seleta
           </div>
-        ) : (
-          <TextBlock title={scene.title} subtitle={scene.subtitle} text={scene.text} />
-        )}
-      </AbsoluteFill>
-      <Footer text={props.footer} />
+        </div>
+
+        <div
+          style={{
+            color: colors.ivory,
+            fontSize: 22,
+            textAlign: 'right',
+            opacity: 0.86,
+          }}
+        >
+          Psicologia e Psiquiatria
+          <br />
+          Itaipava / Petrópolis
+        </div>
+      </div>
+
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 24,
+          left: 42,
+          right: 42,
+          color: 'rgba(255, 248, 236, 0.65)',
+          fontSize: 20,
+          textAlign: 'center',
+        }}
+      >
+        Conteúdo institucional | Informações sujeitas à confirmação no contato
+      </div>
     </AbsoluteFill>
   );
 };
