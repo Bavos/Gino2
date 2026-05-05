@@ -1,1 +1,10 @@
-export {};
+"dependencies": {
+  "remotion": "^4.0.0",
+  "react": "18.2.0",
+  "react-dom": "18.2.0"
+},
+"devDependencies": {
+  "@types/react": "^18.0.0",
+  "@types/react-dom": "^18.0.0",
+  "typescript": "^5.0.0"
+}
