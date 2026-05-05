@@ -1,18 +1,15 @@
 import {Composition} from 'remotion';
-import {MainComposition} from './Composition';
-import type {VideoProps} from './types';
-import input from '../input.json';
+import {Main} from './Main';
 
-export const Root = () => {
+export const Root: React.FC = () => {
   return (
     <Composition
       id="Video"
-      component={MainComposition}
+      component={Main}
+      durationInFrames={900}
+      fps={30}
       width={1080}
       height={1920}
-      fps={30}
-      durationInFrames={900}
-      defaultProps={input}
     />
   );
 };
